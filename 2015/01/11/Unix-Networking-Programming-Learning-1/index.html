@@ -3,20 +3,26 @@
 <head>
   <meta charset="utf-8">
   
-  <title>first post | To Build Your Life</title>
+  <title>Unix Networking Programming Learning 1 | To Build Your Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="It is my first post to github blog. What I want is to record my path as a sofeware programmer!
-A link.&lt;&lt;&lt; No space between [ and (&gt;&gt;&gt;">
+  <meta name="description" content="TIME_WAIT state in TCP
+The duration is twice the maximum segment lifetime (MSL), sometimes called 2MSL.There are two reasons for the TIME_WAIT state:
+
+To implement TCP’s full-duplex connection termina">
 <meta property="og:type" content="article">
-<meta property="og:title" content="first post">
-<meta property="og:url" content="http://yoursite.com/2014/11/09/first-post/">
+<meta property="og:title" content="Unix Networking Programming Learning 1">
+<meta property="og:url" content="http://yoursite.com/2015/01/11/Unix-Networking-Programming-Learning-1/">
 <meta property="og:site_name" content="To Build Your Life">
-<meta property="og:description" content="It is my first post to github blog. What I want is to record my path as a sofeware programmer!
-A link.&lt;&lt;&lt; No space between [ and (&gt;&gt;&gt;">
+<meta property="og:description" content="TIME_WAIT state in TCP
+The duration is twice the maximum segment lifetime (MSL), sometimes called 2MSL.There are two reasons for the TIME_WAIT state:
+
+To implement TCP’s full-duplex connection termina">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="first post">
-<meta name="twitter:description" content="It is my first post to github blog. What I want is to record my path as a sofeware programmer!
-A link.&lt;&lt;&lt; No space between [ and (&gt;&gt;&gt;">
+<meta name="twitter:title" content="Unix Networking Programming Learning 1">
+<meta name="twitter:description" content="TIME_WAIT state in TCP
+The duration is twice the maximum segment lifetime (MSL), sometimes called 2MSL.There are two reasons for the TIME_WAIT state:
+
+To implement TCP’s full-duplex connection termina">
 
   
     <link rel="alternative" href="/atom.xml" title="To Build Your Life" type="application/atom+xml">
@@ -64,10 +70,10 @@ A link.&lt;&lt;&lt; No space between [ and (&gt;&gt;&gt;">
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-first-post" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Unix-Networking-Programming-Learning-1" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2014/11/09/first-post/" class="article-date">
-  <time datetime="2014-11-08T16:19:27.000Z" itemprop="datePublished">Nov 9 2014</time>
+    <a href="/2015/01/11/Unix-Networking-Programming-Learning-1/" class="article-date">
+  <time datetime="2015-01-11T15:07:43.000Z" itemprop="datePublished">Jan 11 2015</time>
 </a>
     
   </div>
@@ -78,7 +84,7 @@ A link.&lt;&lt;&lt; No space between [ and (&gt;&gt;&gt;">
         
   
     <h1 class="article-title" itemprop="name">
-      first post
+      Unix Networking Programming Learning 1
     </h1>
   
 
@@ -86,35 +92,40 @@ A link.&lt;&lt;&lt; No space between [ and (&gt;&gt;&gt;">
     
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<p>It is my first post to github blog. What I want is to record my path as a sofeware programmer!</p>
-<p>A <a href="http://huawei.com" target="_blank" rel="external">link</a>.<br>&lt;&lt;&lt; No space between [ and (&gt;&gt;&gt;</p>
+        <h4 id="TIME_WAIT_state_in_TCP">TIME_WAIT state in TCP</h4>
+<p>The duration is twice the maximum segment lifetime (MSL), sometimes called 2MSL.<br>There are two reasons for the TIME_WAIT state:</p>
+<ol>
+<li><p>To implement TCP’s full-duplex connection termination reliably<br>Assuming taht the final ACK from the client is lost, and then, the server will resend its final FIN. However, if it does not maintain this information, it would respond with an RST, which would be interpreted by the server as an error.</p>
+</li>
+<li><p>To allow old duplicate segments to expire in the network<br>TCP must prevent old duplicates from a connection from reappearing at some later<br>time and being misinterpreted as belonging to a new incarnation of the same connection. To do this , TCP will not initiate a new incarnation of a connection that is currently in the TIME_WAIT state. By enforcing this rule, we are guaranteed that when we successfully establish a TCP connection, <strong>all old duplicates from previous incarnations of the connection have expired</strong> in the network.</p>
+</li>
+</ol>
+<h4 id="2-_TCP_Output">2. TCP Output</h4>
+<p>When an application calls write, the kernel copies all the data from the application buffer into the socket send buffer. The kernel will not return from the write until the final byte in the application buffer has been copied into the socket send buffer.</p>
+<p>The peer TCP must acknowledge the data, and as the ACKs arrive from the peer, only then can our TCP discard the acknowledge data from the socket send buffer. TCP must keep a copy of our data until it is acknowledge by the peer.</p>
+<p>TCP sends the data to IP in MSS-sized or smaller chunks, prepending its TCP header to each segment. IP prepends its header, searches the routing table for the desination IP address (the matching routing table entry specifies the outgoing interface), and passes the datagram to the apropriate datalink. IP might perform fragmentation before passing the datagram to the datalink. <code>Fragmentation happens here by IP.</code></p>
+<h4 id="3-_UDP_Output">3. UDP Output</h4>
+<p>UDP does not really have socket send buffer since it is unreliable, which has no need to keep the send data. </p>
+<p>UDP simply prepends its 8-byte header and passes the datagram to IP. If a UDP application send large datagrams, there is a much higher probability of fragmentation than with TCP, because TCP breaks the application data into MSS-sized chunks, something that has no couterpart in UDP.</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2014/11/09/first-post/" data-id="1uae9fmbsbk5c2s7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/01/11/Unix-Networking-Programming-Learning-1/" data-id="ht9127wbmnq6j7n9" class="article-share-link">Share</a>
       
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Unix-Networking-Programming/">Unix Networking Programming</a></li></ul>
+
     </footer>
   </div>
   
     
 <nav id="article-nav">
   
-    <a href="/2015/01/11/Reading-note-2-of-THE-POWER-of-HABIT/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Reading Note 2 of THE POWER of HABIT
-        
-      </div>
-    </a>
   
-  
-    <a href="/2014/11/08/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2015/01/11/Reading-note-2-of-THE-POWER-of-HABIT/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Hello World</div>
+      <div class="article-nav-title">Reading Note 2 of THE POWER of HABIT</div>
     </a>
   
 </nav>
