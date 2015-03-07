@@ -5,18 +5,18 @@
   
   <title>Process Programming with fork | To Build Your Life</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1. Fork function
-fork is called once but returns twice. The only difference in the returns is that the return value in the child is 0, whereas the return value in the parent is the process ID of the n">
+  <meta name="description" content="1. Definition of fork() function
+pid_t fork(void) is called once but returns twice. The only difference in the returns is that the return value in the child is 0, whereas the return value in the paren">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Process Programming with fork">
 <meta property="og:url" content="http://yoursite.com/2015/03/07/Process-Programming-with-fork/">
 <meta property="og:site_name" content="To Build Your Life">
-<meta property="og:description" content="1. Fork function
-fork is called once but returns twice. The only difference in the returns is that the return value in the child is 0, whereas the return value in the parent is the process ID of the n">
+<meta property="og:description" content="1. Definition of fork() function
+pid_t fork(void) is called once but returns twice. The only difference in the returns is that the return value in the child is 0, whereas the return value in the paren">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Process Programming with fork">
-<meta name="twitter:description" content="1. Fork function
-fork is called once but returns twice. The only difference in the returns is that the return value in the child is 0, whereas the return value in the parent is the process ID of the n">
+<meta name="twitter:description" content="1. Definition of fork() function
+pid_t fork(void) is called once but returns twice. The only difference in the returns is that the return value in the child is 0, whereas the return value in the paren">
 
   
     <link rel="alternative" href="/atom.xml" title="To Build Your Life" type="application/atom+xml">
@@ -86,8 +86,14 @@ fork is called once but returns twice. The only difference in the returns is tha
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="1-_Fork_function">1. Fork function</h3>
-<p>fork is called once but returns twice. The only difference in the returns is that the return value in the child is 0, whereas the return value in the parent is the process ID of the new child.</p>
+        <h3 id="1-_Definition_of_fork()_function">1. Definition of fork() function</h3>
+<p>pid_t fork(void) is called once but returns twice. The only difference in the returns is that the return value in the child is 0, whereas the return value in the parent is the process ID of the new child.</p>
+<h3 id="2-_Program_Example">2. Program Example</h3>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></div><div class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;unistd.h&gt;</span></div><div class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdlib.h&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> g_count; <span class="comment">/*Global variable which would be initialized to 0.*/</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main()</div><div class="line">{</div><div class="line">    <span class="keyword">using</span> std::<span class="built_in">cout</span>;</div><div class="line">    <span class="keyword">int</span> var;</div><div class="line">    pid_t pid;</div><div class="line">	  </div><div class="line">    var = <span class="number">88</span>; </div><div class="line"></div><div class="line">    std::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Before fork\n"</span>;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> ((pid = fork()) &lt; <span class="number">0</span>)</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"fork error!\n"</span>;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>)</div><div class="line">    {		          </div><div class="line">      g_count++;			      </div><div class="line">      var++;</div><div class="line">    }	      </div><div class="line">    <span class="keyword">else</span></div><div class="line">      ::sleep(<span class="number">2</span>);</div><div class="line">		    </div><div class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"pid = "</span> &lt;&lt; getpid() &lt;&lt; <span class="string">" g_count = "</span> &lt;&lt; g_count &lt;&lt; <span class="string">" var = "</span> &lt;&lt; var &lt;&lt; <span class="string">"\n"</span>;</div><div class="line">    ::<span class="built_in">exit</span>(<span class="number">0</span>);		        </div><div class="line">}</div></pre></td></tr></table></figure>
+
+<h1 id="Execution_Result">Execution Result</h1>
+<p>$ ./a.out<br>a write to stdout<br>before fork<br>pid = 430, glob = 7, var = 89      child’s variables were changed<br>pid = 429, glob = 6, var = 88      parent’s copy was not changed<br>$ ./a.out &gt; temp.out<br>$ cat temp.out<br>a write to stdout<br>before fork<br>pid = 432, glob = 7, var = 89<br>before fork<br>pid = 431, glob = 6, var = 88</p>
+<p>The previous program may has different result when you choose differnt standard out. You would get one “before fork” string with your terminal as std out; however, twice string would appear when you select the file as your output. It is caused by the printf function buffer which would be flushed by newline in the terminal output, but fully buffered with files. What’s more, the variable does not changed in the parent process while be abstracted by 1 in the child process.</p>
 
       
     </div>
