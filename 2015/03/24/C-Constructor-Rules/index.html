@@ -18,17 +18,9 @@
 
 
 
+	<meta name="keywords" content="C++ Programming," />
 
-
-
-
-
-    <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.3.0" />
-
-
-
-
-  <title> first post // Satisfy the Real World! </title>
+  <title> C++ Constructor Rules // Satisfy the Real World! </title>
 </head>
 
 <body>
@@ -99,7 +91,7 @@
           
           
             
-              first post
+              C++ Constructor Rules
             
           
         </h1>
@@ -108,15 +100,15 @@
       <div class="post-meta">
         <span class="post-time">
           
-            Posted on 2014-11-08
+            Posted on 2015-03-23
           
         </span>
         
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2014/11/09/first-post/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2014/11/09/first-post/"></span>
+            <a href="/2015/03/24/C-Constructor-Rules/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/24/C-Constructor-Rules/"></span>
             </a>
           </span>
           
@@ -131,9 +123,21 @@
         
 
         
-          <hr>
-<p>It is my first post to github blog. What I want is to record my path as a sofeware programmer!</p>
-<p>A <a href="http://huawei.com" target="_blank" rel="external">link</a>.<br>&lt;&lt;&lt; No space between [ and (&gt;&gt;&gt;</p>
+          <h3 id="Purpose_of_C++_Constructor">Purpose of C++ Constructor</h3>
+<blockquote>
+<p>One of C++’s aims is to make using class objects similar to using standard types. </p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">int year = <span class="number">2001</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">thing</span></span></div><div class="line">{</div><div class="line">      char *pn;</div><div class="line">          int m;</div><div class="line">};</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">thing</span> amabob = </span>{<span class="string">"wodget"</span>, -<span class="number">23</span>};</div></pre></td></tr></table></figure>
+
+<p>The constructor is created to solve above problem.</p>
+<h4 id="Rule_1:_The_default_constructor_will_be_provided_by_the_compiler_only_if_*you_don’t_define_any_constructors-_After_you_define_any_constructor_for_a_class,_the_responsibility_for_providing_a_default_constructor_for_that_class_passes_from_the_compiler_to_you-">Rule 1: The default constructor will be provided by the compiler only if *you don’t define any constructors. After you define any constructor for a class, the responsibility for providing a default constructor for that class passes from the compiler to you.</h4>
+<h4 id="Rule_2:_When_you_design_an_class,_you_should_usually_provide_a_default_constructor_that_implicitly_initializes_all_class_members-">Rule 2: When you design an class, you should usually provide a default constructor that implicitly initializes all class members.</h4>
+<h4 id="Rule_3:_If_your_inherited_class_does_not_explicitly_declare_a_constructor,_the_compiler_will_implicitly_call_the_default_constructor_of_base_class-_If_you_have_not_a_default_constructor_in_base_class,_it_will_cause_error-">Rule 3: If your inherited class does not explicitly declare a constructor, the compiler will implicitly call the default constructor of base class. If you have not a default constructor in base class, it will cause error.</h4>
+<h4 id="Rule_4:_If_you_have_declared_a_constuctor_explicitly_for_inherited_class_whether_it_contains_parameters_or_not_without_explicitly_calling_the_base_class_constructor,_the_compiler_will_first_execute_the_default_constructor_of_base_class-">Rule 4: If you have declared a constuctor explicitly for inherited class whether it contains parameters or not without explicitly calling the base class constructor, the compiler will first execute the default constructor of base class.</h4>
+<h4 id="Rule_5:_If_you_haven’t_call_the_base_class_constructor_explicitly_and_you_have_only_base_class_constructor_with_parameters,_it_will_cause_error-_Because_the_inherited_class_can_not_find_the_base_class_default_constructor_which_is_hiden_by_the_explicit_constructor_of_base_class-">Rule 5: If you haven’t call the base class constructor explicitly and you have only base class constructor with parameters, it will cause error. Because the inherited class can not find the base class default constructor which is hiden by the explicit constructor of base class.</h4>
+<p>Example:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">class Cd</div><div class="line">{</div><div class="line">    <span class="keyword">public</span>:</div><div class="line">      <span class="title">Cd</span>(<span class="keyword">char</span> *s1, <span class="keyword">char</span> *s2, <span class="keyword">int</span> n, <span class="keyword">double</span> x); </div><div class="line">};</div><div class="line"></div><div class="line">class Classic: <span class="keyword">public</span> Cd</div><div class="line">{</div><div class="line">    <span class="keyword">public</span>:</div><div class="line">      <span class="title">Classic</span>(<span class="keyword">char</span> *s, <span class="keyword">char</span> *s1, <span class="keyword">char</span> *s2, <span class="keyword">int</span> n, <span class="keyword">double</span> x);</div><div class="line">};</div><div class="line"></div><div class="line">gcc will report error info when compiling.</div><div class="line">You have two ways to solve <span class="keyword">this</span> error.</div><div class="line">One way: modify the inherited class to explictily call the <span class="keyword">base</span> class constructor.</div><div class="line">class Classic: <span class="keyword">public</span> Cd</div><div class="line">{</div><div class="line">    <span class="keyword">public</span>:</div><div class="line">      <span class="title">Classic</span>(<span class="keyword">char</span> *s, <span class="keyword">char</span> *s1, <span class="keyword">char</span> *s2, <span class="keyword">int</span> n, <span class="keyword">double</span> x) : <span class="title">Cd</span>(s1, s2, n, x)</div><div class="line">};</div><div class="line"></div><div class="line">Second way: modify the <span class="keyword">base</span> class by adding a <span class="keyword">explicit</span> <span class="keyword">default</span> constructor.</div><div class="line">class Cd</div><div class="line">{</div><div class="line">    <span class="keyword">public</span>:</div><div class="line">      <span class="title">Cd</span>();</div><div class="line">      Cd(<span class="keyword">char</span> *s1, <span class="keyword">char</span> *s2, <span class="keyword">int</span> n, <span class="keyword">double</span> x); </div><div class="line">};</div></pre></td></tr></table></figure>
+
 
         
       </div>
@@ -142,18 +146,24 @@
     
       <div class="post-footer">
         
+          <div class="post-tags">
+            
+              <a href="/tags/C-Programming/">
+                #C++ Programming
+              </a>
+            
+          </div>
+        
 
         
           <div class="post-nav">
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2015/01/11/Reading-note-2-of-THE-POWER-of-HABIT/">Reading Note 2 of THE POWER of HABIT</a>
-              
             </div>
 
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2014/11/08/hello-world/">Hello World</a>
+                <a href="/2015/03/20/Maze-Problem/">Maze Problem</a>
               
             </div>
           </div>
@@ -170,8 +180,8 @@
   
     <div class="comments" id="comments">
       
-        <div class="ds-thread" data-thread-key="2014/11/09/first-post/"
-             data-title="first post" data-url="http://yoursite.com/2014/11/09/first-post/">
+        <div class="ds-thread" data-thread-key="2015/03/24/C-Constructor-Rules/"
+             data-title="C++ Constructor Rules" data-url="http://yoursite.com/2015/03/24/C-Constructor-Rules/">
         </div>
 
       
@@ -244,7 +254,7 @@
         <div class="post-toc">
           
           
-            <p class="post-toc-empty">This post does not have a Table Of Contents</div>
+            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Purpose_of_C++_Constructor"><span class="nav-number">1.</span> <span class="nav-text">Purpose of C++ Constructor</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Rule_1:_The_default_constructor_will_be_provided_by_the_compiler_only_if_*you_don’t_define_any_constructors-_After_you_define_any_constructor_for_a_class,_the_responsibility_for_providing_a_default_constructor_for_that_class_passes_from_the_compiler_to_you-"><span class="nav-number">1.1.</span> <span class="nav-text">Rule 1: The default constructor will be provided by the compiler only if *you don’t define any constructors. After you define any constructor for a class, the responsibility for providing a default constructor for that class passes from the compiler to you.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Rule_2:_When_you_design_an_class,_you_should_usually_provide_a_default_constructor_that_implicitly_initializes_all_class_members-"><span class="nav-number">1.2.</span> <span class="nav-text">Rule 2: When you design an class, you should usually provide a default constructor that implicitly initializes all class members.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Rule_3:_If_your_inherited_class_does_not_explicitly_declare_a_constructor,_the_compiler_will_implicitly_call_the_default_constructor_of_base_class-_If_you_have_not_a_default_constructor_in_base_class,_it_will_cause_error-"><span class="nav-number">1.3.</span> <span class="nav-text">Rule 3: If your inherited class does not explicitly declare a constructor, the compiler will implicitly call the default constructor of base class. If you have not a default constructor in base class, it will cause error.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Rule_4:_If_you_have_declared_a_constuctor_explicitly_for_inherited_class_whether_it_contains_parameters_or_not_without_explicitly_calling_the_base_class_constructor,_the_compiler_will_first_execute_the_default_constructor_of_base_class-"><span class="nav-number">1.4.</span> <span class="nav-text">Rule 4: If you have declared a constuctor explicitly for inherited class whether it contains parameters or not without explicitly calling the base class constructor, the compiler will first execute the default constructor of base class.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Rule_5:_If_you_haven’t_call_the_base_class_constructor_explicitly_and_you_have_only_base_class_constructor_with_parameters,_it_will_cause_error-_Because_the_inherited_class_can_not_find_the_base_class_default_constructor_which_is_hiden_by_the_explicit_constructor_of_base_class-"><span class="nav-number">1.5.</span> <span class="nav-text">Rule 5: If you haven’t call the base class constructor explicitly and you have only base class constructor with parameters, it will cause error. Because the inherited class can not find the base class default constructor which is hiden by the explicit constructor of base class.</span></a></li></ol></li></ol></div>
           
         </div>
         <div class="post-toc-indicator-bottom post-toc-indicator"></div>
