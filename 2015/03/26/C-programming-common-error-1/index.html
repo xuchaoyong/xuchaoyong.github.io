@@ -28,7 +28,7 @@
 
 
 
-  <title> Hello World // Satisfy the Real World! </title>
+  <title>  // Satisfy the Real World! </title>
 </head>
 
 <body>
@@ -99,7 +99,7 @@
           
           
             
-              Hello World
+              
             
           
         </h1>
@@ -108,15 +108,15 @@
       <div class="post-meta">
         <span class="post-time">
           
-            Posted on 2014-11-08
+            Posted on 2015-03-25
           
         </span>
         
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2014/11/08/hello-world/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2014/11/08/hello-world/"></span>
+            <a href="/2015/03/26/C-programming-common-error-1/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/26/C-programming-common-error-1/"></span>
             </a>
           </span>
           
@@ -131,24 +131,23 @@
         
 
         
-          <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">trobuleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2>
-<h3 id="Create_a_new_post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+          <p>title: C++ programming common error 1<br>date: 2015-03-26 00:45:35</p>
+<h2 id="tags:C++_programming">tags:C++ programming</h2>
+<h4 id="1:_how_to_use_initializer_list">1: how to use initializer list</h4>
+<p>In the .h file, you should not declare constructor as the following.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function">Classic</span>(<span class="value">char</span> *s, <span class="value">char</span> *s1, <span class="value">char</span> *s2, int n, <span class="value">double</span> x) <span class="value">: <span class="function">Cd</span>(s1, s2, n, x);</span></div></pre></td></tr></table></figure>
 
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>The correct implementation should be the following.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#You just declare your <span class="keyword">inherited</span> <span class="keyword">class</span> <span class="function"><span class="keyword">constructor</span> <span class="title">in</span> <span class="title">the</span> <span class="title">normal</span> <span class="title">way</span>.</span></div><div class="line"><span class="title">Classic</span><span class="params">(char *s, char *s1, char *s2, int n, double x)</span>;</div><div class="line">#<span class="keyword">Then</span> <span class="keyword">in</span> the definition <span class="keyword">of</span> <span class="function"><span class="keyword">constructor</span> <span class="title">in</span> <span class="title">your</span> .<span class="title">cpp</span> <span class="title">file</span>, <span class="title">you</span> <span class="title">should</span> <span class="title">use</span> <span class="title">the</span> <span class="title">initializer</span> <span class="title">list</span> <span class="title">syntax</span>.</span></div><div class="line"><span class="title">Classic</span>::Classic(char *s, char *s1, char *s2, int n, double x) : Cd(s1, s2, n, x)</div><div class="line"><span class="comment">{</span></div><div class="line">}</div></pre></td></tr></table></figure>
 
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<h4 id="Error_2:_how_to_check_whether_the_source_object_is_the_same_as_the_destination_object_in_your_definition_of_operator=">Error 2: how to check whether the source object is the same as the destination object in your definition of operator=</h4>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="keyword">this</span> == &source)</div><div class="line"><span class="comment">#it compares the object address.</span></div><div class="line"><span class="keyword">not</span></div><div class="line"><span class="keyword">if</span> (*<span class="keyword">this</span> == source)</div><div class="line"><span class="comment">#It will compare the object value.</span></div></pre></td></tr></table></figure>
 
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+<h4 id="Error_3:_sizeof(*pointer)_does_not_make_sense,_but_sizeof(array[])_make_sense">Error 3: sizeof(*pointer) does not  make sense, but sizeof(array[]) make sense</h4>
+<h3 id="Suggestions">Suggestions</h3>
+<blockquote>
+<p>Practice Coding is the fastest way to improve your skills. Do it and get feedback.</p>
+</blockquote>
 
         
       </div>
@@ -162,11 +161,11 @@
           <div class="post-nav">
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2014/11/09/first-post/">first post</a>
-              
             </div>
 
             <div class="post-nav-next post-nav-item">
+              
+                <a href="/2015/03/24/Hexo-Deploy-without-Password/">Hexo Deploy without Password</a>
               
             </div>
           </div>
@@ -183,8 +182,8 @@
   
     <div class="comments" id="comments">
       
-        <div class="ds-thread" data-thread-key="2014/11/08/hello-world/"
-             data-title="Hello World" data-url="http://yoursite.com/2014/11/08/hello-world/">
+        <div class="ds-thread" data-thread-key="2015/03/26/C-programming-common-error-1/"
+             data-title="" data-url="http://yoursite.com/2015/03/26/C-programming-common-error-1/">
         </div>
 
       
@@ -257,7 +256,7 @@
         <div class="post-toc">
           
           
-            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick_Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create_a_new_post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run_server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate_static_files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy_to_remote_sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tags:C++_programming"><span class="nav-number">1.</span> <span class="nav-text">tags:C++ programming</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1:_how_to_use_initializer_list"><span class="nav-number">1.0.1.</span> <span class="nav-text">1: how to use initializer list</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Error_2:_how_to_check_whether_the_source_object_is_the_same_as_the_destination_object_in_your_definition_of_operator="><span class="nav-number">1.0.2.</span> <span class="nav-text">Error 2: how to check whether the source object is the same as the destination object in your definition of operator=</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Error_3:_sizeof(*pointer)_does_not_make_sense,_but_sizeof(array[])_make_sense"><span class="nav-number">1.0.3.</span> <span class="nav-text">Error 3: sizeof(*pointer) does not  make sense, but sizeof(array[]) make sense</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Suggestions"><span class="nav-number">1.1.</span> <span class="nav-text">Suggestions</span></a></li></ol></li></ol></div>
           
         </div>
         <div class="post-toc-indicator-bottom post-toc-indicator"></div>
