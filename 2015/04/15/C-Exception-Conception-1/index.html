@@ -18,9 +18,9 @@
 
 
 
-	<meta name="keywords" content="System Configuration," />
+	<meta name="keywords" content="C/C++," />
 
-  <title> Hexo Deploy without Password // Satisfy the Real World! </title>
+  <title> C++ Exception Conception 1 // Satisfy the Real World! </title>
 </head>
 
 <body>
@@ -91,7 +91,7 @@
           
           
             
-              Hexo Deploy without Password
+              C++ Exception Conception 1
             
           
         </h1>
@@ -100,15 +100,15 @@
       <div class="post-meta">
         <span class="post-time">
           
-            Posted on 2015-03-24
+            Posted on 2015-04-14
           
         </span>
         
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/03/24/Hexo-Deploy-without-Password/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/24/Hexo-Deploy-without-Password/"></span>
+            <a href="/2015/04/15/C-Exception-Conception-1/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/04/15/C-Exception-Conception-1/"></span>
             </a>
           </span>
           
@@ -123,25 +123,23 @@
         
 
         
-          <h3 id="1-_Background">1. Background</h3>
-<p>The SSH is the default way to accompish remote login in linux system, which use RSA/DSA encryption to guarantee the system safety. There is a series of tools, such as ssh-keygen, to generate private and public key. By coping the public key to the remote machine, you will get much convenience without inputing the password everytime when you try to connect to the remote server.</p>
-<h3 id="2-_Solutions">2. Solutions</h3>
-<h5 id="1-_Step_one:_Modify_the_hexo_global__config-yml_file-">1. Step one: Modify the hexo global _config.yml file.</h5>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">  <span class="class"><span class="keyword">type</span>: <span class="title">github</span></span></div><div class="line">  repository: git@github.com:xuchaoyong/xuchaoyong.github.io.git</div><div class="line">  branch: master</div><div class="line">#Original repository: https:<span class="comment">//github.com/xuchaoyong***</span></div></pre></td></tr></table></figure>
+          <h3 id="1-_How_is_the_deconstruct_function_is_called?">1. How is the deconstruct function is called?</h3>
+<p>Every function would have a stack when they are called by another function, the input argument and calling function return address would be stored in the stack of called function. When the called function has executed all its statement, it will return to the calling function. At this time, all the local or automatic variables, such as build-in type or object, would be freed from the called function stack when the destructure function would be called. There are some scopes when the deconstruct function would be called:</p>
+<ul>
+<li>block</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="rules">{</span></div><div class="line"><span class="rule">}</span></div></pre></td></tr></table></figure>
 
-<h5 id="2-_Step_two:_generate_key">2. Step two: generate key</h5>
-<p><code>ssh-keygen -t rsa -C &quot;your_email@example.com&quot;</code></p>
-<p>When you get the info: </p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Enter passphrase (<span class="keyword">empty</span> <span class="keyword">for</span> no passphrase): [<span class="keyword">Type</span> a passphrase]</div><div class="line">Enter same passphrase again: [<span class="keyword">Type</span> passphrase again]</div></pre></td></tr></table></figure>
+<ul>
+<li>function scope</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="params">()</span></span></div><div class="line">{</div><div class="line">}</div></pre></td></tr></table></figure>
 
-<p>Keep it empty so that you would not need to enter password when you execute hexo deploy.</p>
-<h5 id="3-_Step_three:_start_ssh-agent_and_add_key">3. Step three: start ssh-agent and add key</h5>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">eval <span class="string">'ssh-agent -s'</span></div><div class="line">ssh-<span class="built_in">add</span> ~/.ssh/id_rsa</div><div class="line"><span class="comment">#You may get the follow error info</span></div><div class="line">Could <span class="operator">not</span> <span class="built_in">open</span> <span class="operator">a</span> connection <span class="built_in">to</span> your authentication agent</div><div class="line"><span class="comment">#add to or create file ~/.ssh/config with the contents</span></div><div class="line">`ForwardAgent yes`</div></pre></td></tr></table></figure>
-
-<h5 id="4-_Step_four:_copy_the_~/-ssh/id_rsa-pub_content_to_your_github_ssh_key-">4. Step four: copy the ~/.ssh/id_rsa.pub content to your github ssh key.</h5>
-<h5 id="5-_Done-">5. Done.</h5>
-<h3 id="3-_Conclusion">3. Conclusion</h3>
-<p>By generate ssh private and public key, there is no need for you to enter password when you want to hexo deploy operation.<br>Enjoy it!</p>
+<h3 id="2-_Unwinding_stack_method_of_try-catch_exception">2. Unwinding stack method of try-catch exception</h3>
+<p>throw statement processes objects put on the stack by the entire sequence of function calls between the try block and the throw.<br>Throw mechanism is that, just as with function returns, the class destructors are called for any automatic class objects on the stack.</p>
+<blockquote>
+<p>If the throw statement return from lower level stack to a higher level stack, it should free all the local variables in the intermediate function stack.</p>
+</blockquote>
 
         
       </div>
@@ -152,8 +150,8 @@
         
           <div class="post-tags">
             
-              <a href="/tags/System-Configuration/">
-                #System Configuration
+              <a href="/tags/C-C/">
+                #C/C++
               </a>
             
           </div>
@@ -163,13 +161,11 @@
           <div class="post-nav">
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2015/03/26/C-Programming-Errors-Collection/">C++ Programming Errors Collection</a>
-              
             </div>
 
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2015/03/24/C-Constructor-Rules/">C++ Constructor Rules</a>
+                <a href="/2015/04/14/How-to-make-GTD-plan-Checklist/"></a>
               
             </div>
           </div>
@@ -186,8 +182,8 @@
   
     <div class="comments" id="comments">
       
-        <div class="ds-thread" data-thread-key="2015/03/24/Hexo-Deploy-without-Password/"
-             data-title="Hexo Deploy without Password" data-url="http://yoursite.com/2015/03/24/Hexo-Deploy-without-Password/">
+        <div class="ds-thread" data-thread-key="2015/04/15/C-Exception-Conception-1/"
+             data-title="C++ Exception Conception 1" data-url="http://yoursite.com/2015/04/15/C-Exception-Conception-1/">
         </div>
 
       
@@ -260,7 +256,7 @@
         <div class="post-toc">
           
           
-            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_Background"><span class="nav-number">1.</span> <span class="nav-text">1. Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_Solutions"><span class="nav-number">2.</span> <span class="nav-text">2. Solutions</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-_Step_one:_Modify_the_hexo_global__config-yml_file-"><span class="nav-number">2.0.1.</span> <span class="nav-text">1. Step one: Modify the hexo global _config.yml file.</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-_Step_two:_generate_key"><span class="nav-number">2.0.2.</span> <span class="nav-text">2. Step two: generate key</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-_Step_three:_start_ssh-agent_and_add_key"><span class="nav-number">2.0.3.</span> <span class="nav-text">3. Step three: start ssh-agent and add key</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-_Step_four:_copy_the_~/-ssh/id_rsa-pub_content_to_your_github_ssh_key-"><span class="nav-number">2.0.4.</span> <span class="nav-text">4. Step four: copy the ~/.ssh/id_rsa.pub content to your github ssh key.</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-_Done-"><span class="nav-number">2.0.5.</span> <span class="nav-text">5. Done.</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-_Conclusion"><span class="nav-number">3.</span> <span class="nav-text">3. Conclusion</span></a></li></ol></div>
+            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_How_is_the_deconstruct_function_is_called?"><span class="nav-number">1.</span> <span class="nav-text">1. How is the deconstruct function is called?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_Unwinding_stack_method_of_try-catch_exception"><span class="nav-number">2.</span> <span class="nav-text">2. Unwinding stack method of try-catch exception</span></a></li></ol></div>
           
         </div>
         <div class="post-toc-indicator-bottom post-toc-indicator"></div>
