@@ -102,6 +102,101 @@
           
           
             
+              <a class="post-title-link" href="/2015/03/24/Hexo-Deploy-without-Password/">
+                Hexo Deploy without Password
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          
+            Posted on 2015-03-24
+          
+        </span>
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/03/24/Hexo-Deploy-without-Password/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/24/Hexo-Deploy-without-Password/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    
+      <div class="post-body">
+
+        
+        
+
+        
+          
+            <h3 id="1-_Background">1. Background</h3>
+<p>The SSH is the default way to accompish remote login in linux system, which use RSA/DSA encryption to guarantee the system safety. There is a series of tools, such as ssh-keygen, to generate private and public key. By coping the public key to the remote machine, you will get much convenience without inputing the password everytime when you try to connect to the remote server.</p>
+<h3 id="2-_Solutions">2. Solutions</h3>
+<h5 id="1-_Step_one:_Modify_the_hexo_global__config-yml_file-">1. Step one: Modify the hexo global _config.yml file.</h5>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">  <span class="class"><span class="keyword">type</span>: <span class="title">github</span></span></div><div class="line">  repository: git@github.com:xuchaoyong/xuchaoyong.github.io.git</div><div class="line">  branch: master</div><div class="line">#Original repository: https:<span class="comment">//github.com/xuchaoyong***</span></div></pre></td></tr></table></figure>
+
+<h5 id="2-_Step_two:_generate_key">2. Step two: generate key</h5>
+<p><code>ssh-keygen -t rsa -C &quot;your_email@example.com&quot;</code></p>
+<p>When you get the info: </p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Enter passphrase (<span class="keyword">empty</span> <span class="keyword">for</span> no passphrase): [<span class="keyword">Type</span> a passphrase]</div><div class="line">Enter same passphrase again: [<span class="keyword">Type</span> passphrase again]</div></pre></td></tr></table></figure>
+
+<p>Keep it empty so that you would not need to enter password when you execute hexo deploy.</p>
+<h5 id="3-_Step_three:_start_ssh-agent_and_add_key">3. Step three: start ssh-agent and add key</h5>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">eval <span class="string">'ssh-agent -s'</span></div><div class="line">ssh-<span class="built_in">add</span> ~/.ssh/id_rsa</div><div class="line"><span class="comment">#You may get the follow error info</span></div><div class="line">Could <span class="operator">not</span> <span class="built_in">open</span> <span class="operator">a</span> connection <span class="built_in">to</span> your authentication agent</div><div class="line"><span class="comment">#add to or create file ~/.ssh/config with the contents</span></div><div class="line">`ForwardAgent yes`</div></pre></td></tr></table></figure>
+
+<h5 id="4-_Step_four:_copy_the_~/-ssh/id_rsa-pub_content_to_your_github_ssh_key-">4. Step four: copy the ~/.ssh/id_rsa.pub content to your github ssh key.</h5>
+<h5 id="5-_Done-">5. Done.</h5>
+<h3 id="3-_Conclusion">3. Conclusion</h3>
+<p>By generate ssh private and public key, there is no need for you to enter password when you want to hexo deploy operation.<br>Enjoy it!</p>
+
+          
+        
+      </div>
+    
+
+    
+      <div class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/System-Configuration/">
+                #System Configuration
+              </a>
+            
+          </div>
+        
+
+        
+
+        
+        
+          <div class="post-eof"></div>
+        
+      </div>
+    
+  </div>
+
+
+  
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2015/03/24/C-Constructor-Rules/">
                 C++ Constructor Rules
               </a>
@@ -258,8 +353,8 @@
         
           <div class="post-tags">
             
-              <a href="/tags/date-structure-and-algorithm/">
-                #date structure and algorithm
+              <a href="/tags/Data-Structure-and-Algorithm/">
+                #Data Structure and Algorithm
               </a>
             
           </div>
@@ -340,8 +435,8 @@
         
           <div class="post-tags">
             
-              <a href="/tags/data-structure-and-algorithm/">
-                #data structure and algorithm
+              <a href="/tags/Data-Structure-and-Algorithm/">
+                #Data Structure and Algorithm
               </a>
             
           </div>
@@ -445,97 +540,6 @@
 
         
         
-          <div class="post-eof"></div>
-        
-      </div>
-    
-  </div>
-
-
-  
-    
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/01/11/Unix-Networking-Programming-Learning-1/">
-                Unix Networking Programming Learning 1
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          
-            Posted on 2015-01-11
-          
-        </span>
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/01/11/Unix-Networking-Programming-Learning-1/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/01/11/Unix-Networking-Programming-Learning-1/"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </div>
-
-    
-      <div class="post-body">
-
-        
-        
-
-        
-          
-            <h4 id="TIME_WAIT_state_in_TCP">TIME_WAIT state in TCP</h4>
-<p>The duration is twice the maximum segment lifetime (MSL), sometimes called 2MSL.<br>There are two reasons for the TIME_WAIT state:</p>
-<ol>
-<li><p>To implement TCP’s full-duplex connection termination reliably<br>Assuming taht the final ACK from the client is lost, and then, the server will resend its final FIN. However, if it does not maintain this information, it would respond with an RST, which would be interpreted by the server as an error.</p>
-</li>
-<li><p>To allow old duplicate segments to expire in the network<br>TCP must prevent old duplicates from a connection from reappearing at some later<br>time and being misinterpreted as belonging to a new incarnation of the same connection. To do this , TCP will not initiate a new incarnation of a connection that is currently in the TIME_WAIT state. By enforcing this rule, we are guaranteed that when we successfully establish a TCP connection, <strong>all old duplicates from previous incarnations of the connection have expired</strong> in the network.</p>
-</li>
-</ol>
-<h4 id="2-_TCP_Output">2. TCP Output</h4>
-<p>When an application calls write, the kernel copies all the data from the application buffer into the socket send buffer. The kernel will not return from the write until the final byte in the application buffer has been copied into the socket send buffer.</p>
-<p>The peer TCP must acknowledge the data, and as the ACKs arrive from the peer, only then can our TCP discard the acknowledge data from the socket send buffer. TCP must keep a copy of our data until it is acknowledge by the peer.</p>
-<p>TCP sends the data to IP in MSS-sized or smaller chunks, prepending its TCP header to each segment. IP prepends its header, searches the routing table for the desination IP address (the matching routing table entry specifies the outgoing interface), and passes the datagram to the apropriate datalink. IP might perform fragmentation before passing the datagram to the datalink. <code>Fragmentation happens here by IP.</code></p>
-<h4 id="3-_UDP_Output">3. UDP Output</h4>
-<p>UDP does not really have socket send buffer since it is unreliable, which has no need to keep the send data. </p>
-<p>UDP simply prepends its 8-byte header and passes the datagram to IP. If a UDP application send large datagrams, there is a much higher probability of fragmentation than with TCP, because TCP breaks the application data into MSS-sized chunks, something that has no couterpart in UDP.</p>
-
-          
-        
-      </div>
-    
-
-    
-      <div class="post-footer">
-        
-          <div class="post-tags">
-            
-              <a href="/tags/Unix-Networking-Programming/">
-                #Unix Networking Programming
-              </a>
-            
-          </div>
-        
-
-        
-
-        
-        
       </div>
     
   </div>
@@ -574,11 +578,11 @@
       <p class="site-description motion-element"></p>
       <div class="site-state motion-element">
         <div class="site-state-item site-state-posts">
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">posts</span>
         </div>
         <div class="site-state-item site-state-tags">
-            <span class="site-state-item-count">8</span>
+            <span class="site-state-item-count">10</span>
             <span class="site-state-item-name">tags</span>
         </div>
         <div class="site-state-item site-state-pages">
