@@ -20,7 +20,7 @@
 
 	<meta name="keywords" content="C++ Programming," />
 
-  <title> C++ Exception Conception 1 // Satisfy the Real World! </title>
+  <title> open function Trap in C++ // Satisfy the Real World! </title>
 </head>
 
 <body>
@@ -91,7 +91,7 @@
           
           
             
-              C++ Exception Conception 1
+              open function Trap in C++
             
           
         </h1>
@@ -100,15 +100,15 @@
       <div class="post-meta">
         <span class="post-time">
           
-            Posted on 2015-04-14
+            Posted on 2015-07-24
           
         </span>
         
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/04/15/C-Exception-Conception-1/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/04/15/C-Exception-Conception-1/"></span>
+            <a href="/2015/07/24/open-function-Trap-in-C/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/24/open-function-Trap-in-C/"></span>
             </a>
           </span>
           
@@ -123,23 +123,86 @@
         
 
         
-          <h3 id="1-_How_is_the_deconstruct_function_is_called?">1. How is the deconstruct function is called?</h3>
-<p>Every function would have a stack when they are called by another function, the input argument and calling function return address would be stored in the stack of called function. When the called function has executed all its statement, it will return to the calling function. At this time, all the local or automatic variables, such as build-in type or object, would be freed from the called function stack when the destructure function would be called. There are some scopes when the deconstruct function would be called:</p>
-<ul>
-<li>block</li>
-</ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="rules">{</span></div><div class="line"><span class="rule">}</span></div></pre></td></tr></table></figure>
+          <h2 id="1-_Background">1. Background</h2>
+<p>Give the following code which comes from unixdomain/mycat.c in UNP.</p>
+<pre><code><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;stdlib.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;sys/socket.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;errno.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> "unixsock.h"</span>
 
-<ul>
-<li>function scope</li>
-</ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="params">()</span></span></div><div class="line">{</div><div class="line">}</div></pre></td></tr></table></figure>
+<span class="keyword">static</span> <span class="keyword">int</span> write_fd(<span class="keyword">int</span> fd, <span class="keyword">void</span> *ptr, <span class="keyword">int</span> nbytes, <span class="keyword">int</span> sendfd);
 
-<h3 id="2-_Unwinding_stack_method_of_try-catch_exception">2. Unwinding stack method of try-catch exception</h3>
-<p>throw statement processes objects put on the stack by the entire sequence of function calls between the try block and the throw.<br>Throw mechanism is that, just as with function returns, the class destructors are called for any automatic class objects on the stack.</p>
-<blockquote>
-<p>If the throw statement return from lower level stack to a higher level stack, it should free all the local variables in the intermediate function stack.</p>
-</blockquote>
+<span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)
+{
+    <span class="keyword">int</span> fd;
+    <span class="keyword">char</span> fdstr[<span class="number">20</span>];
+    <span class="keyword">int</span> value = <span class="number">0</span>;
+    <span class="keyword">if</span> (argc != <span class="number">4</span>)
+        ERR_RETURN_VALUE(<span class="string">"usage: openfile &lt;sockfd&gt; &lt;filename&gt; &lt;mode&gt;"</span>);
+
+    <span class="keyword">if</span> ((fd = open(argv[<span class="number">2</span>], atoi(argv[<span class="number">3</span>])) &lt; <span class="number">0</span>))
+    {
+        ERR_RETURN_NOVALUE(<span class="string">"file non-exist"</span>);
+        <span class="built_in">exit</span>((errno &gt; <span class="number">0</span>) ? errno : <span class="number">255</span>);
+    }
+
+    <span class="keyword">if</span> (write_fd(atoi(argv[<span class="number">1</span>]), <span class="keyword">const_cast</span>&lt;<span class="keyword">char</span> *&gt;(<span class="string">""</span>), <span class="number">1</span>, fd) &lt; <span class="number">0</span>)
+    {
+        ERR_RETURN_NOVALUE(<span class="string">"write_fd failed"</span>);
+        <span class="built_in">exit</span>((errno &gt; <span class="number">0</span>) ? errno : <span class="number">255</span>); 
+    }
+
+    close(fd);
+
+}
+</code></pre><p>Can you find the bug in the above code?<br>The bug costs me more than 4 hours to figure it out.</p>
+<h2 id="2-_Output">2. Output</h2>
+<p>The purpose of above code is to transfer a file descriptor from the child process to parent process. Then the parent program will read content the file descriptor. </p>
+<p>However, I find that my program could not correctly output the content of the file. </p>
+<p>Then I try to write something to the file in the child process and I can read the content in the parent process, which totally confused me.</p>
+<p>In the beginning, I think there must be something wrong with the opening mode of the file. Therefore, I used fcntl function to check and change the mode of the descriptor. However, it does not make a little chance.</p>
+<p>However, during the procedure, I find a strange matter that I get different mode by using fcntl in two differnt program to get the status of mode.</p>
+<p>OK.</p>
+<p>I find I just made a so stupid mistake.</p>
+<h2 id="3-_Solution">3. Solution</h2>
+<pre><code><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;stdlib.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;sys/socket.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> &lt;errno.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span> "unixsock.h"</span>
+
+<span class="keyword">static</span> <span class="keyword">int</span> write_fd(<span class="keyword">int</span> fd, <span class="keyword">void</span> *ptr, <span class="keyword">int</span> nbytes, <span class="keyword">int</span> sendfd);
+
+<span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)
+{
+    <span class="keyword">int</span> fd;
+    <span class="keyword">char</span> fdstr[<span class="number">20</span>];
+    <span class="keyword">int</span> value = <span class="number">0</span>;
+    <span class="keyword">if</span> (argc != <span class="number">4</span>)
+        ERR_RETURN_VALUE(<span class="string">"usage: openfile &lt;sockfd&gt; &lt;filename&gt; &lt;mode&gt;"</span>);
+
+    <span class="comment">/*The open function bracket*/</span>
+    <span class="keyword">if</span> ((fd = open(argv[<span class="number">2</span>], atoi(argv[<span class="number">3</span>]))) &lt; <span class="number">0</span>)
+    {
+        ERR_RETURN_NOVALUE(<span class="string">"file non-exist"</span>);
+        <span class="built_in">exit</span>((errno &gt; <span class="number">0</span>) ? errno : <span class="number">255</span>);
+    }
+
+    <span class="keyword">if</span> (write_fd(atoi(argv[<span class="number">1</span>]), <span class="keyword">const_cast</span>&lt;<span class="keyword">char</span> *&gt;(<span class="string">""</span>), <span class="number">1</span>, fd) &lt; <span class="number">0</span>)
+    {
+        ERR_RETURN_NOVALUE(<span class="string">"write_fd failed"</span>);
+        <span class="built_in">exit</span>((errno &gt; <span class="number">0</span>) ? errno : <span class="number">255</span>); 
+    }
+
+    close(fd);
+
+}
+</code></pre><p>Wrong Code: <code>(fd = open(argv[2], atoi(argv[3])) &lt; 0)</code></p>
+<p>fd = 0, which refers to STDIN. Because open will return 1 which is bigger than zero, fd = 1 &lt; 0 = false = 0.</p>
+<p>Right Code: <code>((fd = open(argv[2], atoi(argv[3]))) &lt; 0)</code></p>
 
         
       </div>
@@ -161,13 +224,11 @@
           <div class="post-nav">
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2015/04/25/Your-Goal-Should-Be-Quantified/">Your Goal Should Be Quantified</a>
-              
             </div>
 
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2015/04/14/How-to-make-GTD-plan-Checklist/">How to make GTD plan Checklist</a>
+                <a href="/2015/04/25/Your-Goal-Should-Be-Quantified/">Your Goal Should Be Quantified</a>
               
             </div>
           </div>
@@ -184,8 +245,8 @@
   
     <div class="comments" id="comments">
       
-        <div class="ds-thread" data-thread-key="2015/04/15/C-Exception-Conception-1/"
-             data-title="C++ Exception Conception 1" data-url="http://yoursite.com/2015/04/15/C-Exception-Conception-1/">
+        <div class="ds-thread" data-thread-key="2015/07/24/open-function-Trap-in-C/"
+             data-title="open function Trap in C++" data-url="http://yoursite.com/2015/07/24/open-function-Trap-in-C/">
         </div>
 
       
@@ -258,7 +319,7 @@
         <div class="post-toc">
           
           
-            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_How_is_the_deconstruct_function_is_called?"><span class="nav-number">1.</span> <span class="nav-text">1. How is the deconstruct function is called?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_Unwinding_stack_method_of_try-catch_exception"><span class="nav-number">2.</span> <span class="nav-text">2. Unwinding stack method of try-catch exception</span></a></li></ol></div>
+            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-_Background"><span class="nav-number">1.</span> <span class="nav-text">1. Background</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-_Output"><span class="nav-number">2.</span> <span class="nav-text">2. Output</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-_Solution"><span class="nav-number">3.</span> <span class="nav-text">3. Solution</span></a></li></ol></div>
           
         </div>
         <div class="post-toc-indicator-bottom post-toc-indicator"></div>
