@@ -18,9 +18,9 @@
 
 
 
-	<meta name="keywords" content="Unix Networking Programming," />
+	<meta name="keywords" content="Design Pattern," />
 
-  <title> Unix Networking Programming Learning 1 // Satisfy the Real World! </title>
+  <title> Strategy // Satisfy the Real World! </title>
 </head>
 
 <body>
@@ -91,7 +91,7 @@
           
           
             
-              Unix Networking Programming Learning 1
+              Strategy
             
           
         </h1>
@@ -100,15 +100,15 @@
       <div class="post-meta">
         <span class="post-time">
           
-            Posted on 2015-01-11
+            Posted on 2015-08-20
           
         </span>
         
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/01/11/Unix-Networking-Programming-Learning-1/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/01/11/Unix-Networking-Programming-Learning-1/"></span>
+            <a href="/2015/08/20/Strategy/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/20/Strategy/"></span>
             </a>
           </span>
           
@@ -123,21 +123,10 @@
         
 
         
-          <h4 id="TIME_WAIT_state_in_TCP">TIME_WAIT state in TCP</h4>
-<p>The duration is twice the maximum segment lifetime (MSL), sometimes called 2MSL.<br>There are two reasons for the TIME_WAIT state:</p>
-<ol>
-<li><p>To implement TCP’s full-duplex connection termination reliably<br>Assuming taht the final ACK from the client is lost, and then, the server will resend its final FIN. However, if it does not maintain this information, it would respond with an RST, which would be interpreted by the server as an error.</p>
-</li>
-<li><p>To allow old duplicate segments to expire in the network<br>TCP must prevent old duplicates from a connection from reappearing at some later<br>time and being misinterpreted as belonging to a new incarnation of the same connection. To do this , TCP will not initiate a new incarnation of a connection that is currently in the TIME_WAIT state. By enforcing this rule, we are guaranteed that when we successfully establish a TCP connection, <strong>all old duplicates from previous incarnations of the connection have expired</strong> in the network.</p>
-</li>
-</ol>
-<h4 id="2-_TCP_Output">2. TCP Output</h4>
-<p>When an application calls write, the kernel copies all the data from the application buffer into the socket send buffer. The kernel will not return from the write until the final byte in the application buffer has been copied into the socket send buffer.</p>
-<p>The peer TCP must acknowledge the data, and as the ACKs arrive from the peer, only then can our TCP discard the acknowledge data from the socket send buffer. TCP must keep a copy of our data until it is acknowledge by the peer.</p>
-<p>TCP sends the data to IP in MSS-sized or smaller chunks, prepending its TCP header to each segment. IP prepends its header, searches the routing table for the desination IP address (the matching routing table entry specifies the outgoing interface), and passes the datagram to the apropriate datalink. IP might perform fragmentation before passing the datagram to the datalink. <code>Fragmentation happens here by IP.</code></p>
-<h4 id="3-_UDP_Output">3. UDP Output</h4>
-<p>UDP does not really have socket send buffer since it is unreliable, which has no need to keep the send data. </p>
-<p>UDP simply prepends its 8-byte header and passes the datagram to IP. If a UDP application send large datagrams, there is a much higher probability of fragmentation than with TCP, because TCP breaks the application data into MSS-sized chunks, something that has no couterpart in UDP.</p>
+          <h1 id="Intent">Intent</h1>
+<p>Define a family of algorithms, encapsulate each one, and make them interchangeable. Strategy lets the algorithm vary independently from clients that use it.</p>
+<h1 id="UML">UML</h1>
+<p><img src="https://raw.githubusercontent.com/xuchaoyong/images/master/Strategy.JPG" alt="Screen Shot" title="maze map"></p>
 
         
       </div>
@@ -148,8 +137,8 @@
         
           <div class="post-tags">
             
-              <a href="/tags/Unix-Networking-Programming/">
-                #Unix Networking Programming
+              <a href="/tags/Design-Pattern/">
+                #Design Pattern
               </a>
             
           </div>
@@ -159,13 +148,11 @@
           <div class="post-nav">
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2015/03/07/Process-Programming-with-fork/">Process Programming with fork</a>
-              
             </div>
 
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2015/01/11/Reading-note-2-of-THE-POWER-of-HABIT/">Reading Note 2 of THE POWER of HABIT</a>
+                <a href="/2015/07/25/non-blocking-IO/">non-blocking IO</a>
               
             </div>
           </div>
@@ -182,8 +169,8 @@
   
     <div class="comments" id="comments">
       
-        <div class="ds-thread" data-thread-key="2015/01/11/Unix-Networking-Programming-Learning-1/"
-             data-title="Unix Networking Programming Learning 1" data-url="http://yoursite.com/2015/01/11/Unix-Networking-Programming-Learning-1/">
+        <div class="ds-thread" data-thread-key="2015/08/20/Strategy/"
+             data-title="Strategy" data-url="http://yoursite.com/2015/08/20/Strategy/">
         </div>
 
       
@@ -256,7 +243,7 @@
         <div class="post-toc">
           
           
-            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#TIME_WAIT_state_in_TCP"><span class="nav-number">1.</span> <span class="nav-text">TIME_WAIT state in TCP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-_TCP_Output"><span class="nav-number">2.</span> <span class="nav-text">2. TCP Output</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-_UDP_Output"><span class="nav-number">3.</span> <span class="nav-text">3. UDP Output</span></a></li></ol></div>
+            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Intent"><span class="nav-number">1.</span> <span class="nav-text">Intent</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UML"><span class="nav-number">2.</span> <span class="nav-text">UML</span></a></li></ol></div>
           
         </div>
         <div class="post-toc-indicator-bottom post-toc-indicator"></div>
