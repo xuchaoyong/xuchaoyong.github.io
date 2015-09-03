@@ -102,6 +102,99 @@
           
           
             
+              <a class="post-title-link" href="/2015/04/15/C-Exception-Conception-1/">
+                C++ Exception Conception 1
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          
+            Posted on 2015-04-14
+          
+        </span>
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/04/15/C-Exception-Conception-1/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/04/15/C-Exception-Conception-1/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    
+      <div class="post-body">
+
+        
+        
+
+        
+          
+            <h3 id="1-_How_is_the_deconstruct_function_is_called?">1. How is the deconstruct function is called?</h3>
+<p>Every function would have a stack when they are called by another function, the input argument and calling function return address would be stored in the stack of called function. When the called function has executed all its statement, it will return to the calling function. At this time, all the local or automatic variables, such as build-in type or object, would be freed from the called function stack when the destructure function would be called. There are some scopes when the deconstruct function would be called:</p>
+<ul>
+<li>block</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="rules">{</span></div><div class="line"><span class="rule">}</span></div></pre></td></tr></table></figure>
+
+<ul>
+<li>function scope</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="params">()</span></span></div><div class="line">{</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<h3 id="2-_Unwinding_stack_method_of_try-catch_exception">2. Unwinding stack method of try-catch exception</h3>
+<p>throw statement processes objects put on the stack by the entire sequence of function calls between the try block and the throw.<br>Throw mechanism is that, just as with function returns, the class destructors are called for any automatic class objects on the stack.</p>
+<blockquote>
+<p>If the throw statement return from lower level stack to a higher level stack, it should free all the local variables in the intermediate function stack.</p>
+</blockquote>
+
+          
+        
+      </div>
+    
+
+    
+      <div class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/C-Programming/">
+                #C++ Programming
+              </a>
+            
+          </div>
+        
+
+        
+
+        
+        
+          <div class="post-eof"></div>
+        
+      </div>
+    
+  </div>
+
+
+  
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2015/04/14/How-to-make-GTD-plan-Checklist/">
                 How to make GTD plan Checklist
               </a>
@@ -453,112 +546,6 @@
 
         
         
-          <div class="post-eof"></div>
-        
-      </div>
-    
-  </div>
-
-
-  
-    
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/03/24/C-Constructor-Rules/">
-                C++ Constructor Rules
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          
-            Posted on 2015-03-23
-          
-        </span>
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/03/24/C-Constructor-Rules/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/24/C-Constructor-Rules/"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </div>
-
-    
-      <div class="post-body">
-
-        
-        
-
-        
-          
-            <h3 id="Purpose_of_C++_Constructor">Purpose of C++ Constructor</h3>
-<blockquote>
-<p>One of C++’s aims is to make using class objects similar to using standard types. </p>
-</blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">int year = <span class="number">2001</span>;</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">thing</span></span></div><div class="line">{</div><div class="line">      char *pn;</div><div class="line">          int m;</div><div class="line">};</div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">thing</span> amabob = </span>{<span class="string">"wodget"</span>, -<span class="number">23</span>};</div></pre></td></tr></table></figure>
-
-<p>The constructor is created to solve above problem.</p>
-<h5 id="Rule_1:">Rule 1:</h5>
-<blockquote>
-<p>The default constructor will be provided by the compiler only if *you don’t define any constructors. After you define any constructor for a class, the responsibility for providing a default constructor for that class passes from the compiler to you.</p>
-</blockquote>
-<h5 id="Rule_2:">Rule 2:</h5>
-<blockquote>
-<p>When you design an class, you should usually provide a default constructor that implicitly initializes all class members.</p>
-</blockquote>
-<h5 id="Rule_3:">Rule 3:</h5>
-<blockquote>
-<p>If your inherited class does not explicitly declare a constructor, the compiler will implicitly call the default constructor of base class. If you have not a default constructor in base class, it will cause error.</p>
-</blockquote>
-<h5 id="Rule_4:">Rule 4:</h5>
-<blockquote>
-<p>If you have declared a constuctor explicitly for inherited class whether it contains parameters or not without explicitly calling the base class constructor, the compiler will first execute the default constructor of base class.</p>
-</blockquote>
-<h5 id="Rule_5:">Rule 5:</h5>
-<blockquote>
-<p>If you haven’t call the base class constructor explicitly and you have only base class constructor with parameters, it will cause error. Because the inherited class can not find the base class default constructor which is hiden by the explicit constructor of base class.</p>
-</blockquote>
-<p>Example:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">class Cd</div><div class="line">{</div><div class="line">    <span class="keyword">public</span>:</div><div class="line">      <span class="title">Cd</span>(<span class="keyword">char</span> *s1, <span class="keyword">char</span> *s2, <span class="keyword">int</span> n, <span class="keyword">double</span> x); </div><div class="line">};</div><div class="line"></div><div class="line">class Classic: <span class="keyword">public</span> Cd</div><div class="line">{</div><div class="line">    <span class="keyword">public</span>:</div><div class="line">      <span class="title">Classic</span>(<span class="keyword">char</span> *s, <span class="keyword">char</span> *s1, <span class="keyword">char</span> *s2, <span class="keyword">int</span> n, <span class="keyword">double</span> x);</div><div class="line">};</div><div class="line"></div><div class="line">gcc will report error info when compiling.</div><div class="line">You have two ways to solve <span class="keyword">this</span> error.</div><div class="line">One way: modify the inherited class to explictily call the <span class="keyword">base</span> class constructor.</div><div class="line">class Classic: <span class="keyword">public</span> Cd</div><div class="line">{</div><div class="line">    <span class="keyword">public</span>:</div><div class="line">      <span class="title">Classic</span>(<span class="keyword">char</span> *s, <span class="keyword">char</span> *s1, <span class="keyword">char</span> *s2, <span class="keyword">int</span> n, <span class="keyword">double</span> x) : <span class="title">Cd</span>(s1, s2, n, x)</div><div class="line">};</div><div class="line"></div><div class="line">Second way: modify the <span class="keyword">base</span> class by adding a <span class="keyword">explicit</span> <span class="keyword">default</span> constructor.</div><div class="line">class Cd</div><div class="line">{</div><div class="line">    <span class="keyword">public</span>:</div><div class="line">      <span class="title">Cd</span>();</div><div class="line">      Cd(<span class="keyword">char</span> *s1, <span class="keyword">char</span> *s2, <span class="keyword">int</span> n, <span class="keyword">double</span> x); </div><div class="line">};</div></pre></td></tr></table></figure>
-
-
-          
-        
-      </div>
-    
-
-    
-      <div class="post-footer">
-        
-          <div class="post-tags">
-            
-              <a href="/tags/C-Programming/">
-                #C++ Programming
-              </a>
-            
-          </div>
-        
-
-        
-
-        
-        
       </div>
     
   </div>
@@ -597,11 +584,11 @@
       <p class="site-description motion-element"></p>
       <div class="site-state motion-element">
         <div class="site-state-item site-state-posts">
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">posts</span>
         </div>
         <div class="site-state-item site-state-tags">
-            <span class="site-state-item-count">9</span>
+            <span class="site-state-item-count">10</span>
             <span class="site-state-item-name">tags</span>
         </div>
         <div class="site-state-item site-state-pages">

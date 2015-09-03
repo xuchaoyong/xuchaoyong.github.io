@@ -18,9 +18,9 @@
 
 
 
-	<meta name="keywords" content="Unix Networking Programming," />
+	<meta name="keywords" content="Programming in Lua," />
 
-  <title> non-blocking IO // Satisfy the Real World! </title>
+  <title> require and module in lua // Satisfy the Real World! </title>
 </head>
 
 <body>
@@ -91,7 +91,7 @@
           
           
             
-              non-blocking IO
+              require and module in lua
             
           
         </h1>
@@ -100,15 +100,15 @@
       <div class="post-meta">
         <span class="post-time">
           
-            Posted on 2015-07-25
+            Posted on 2015-09-03
           
         </span>
         
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/07/25/non-blocking-IO/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/25/non-blocking-IO/"></span>
+            <a href="/2015/09/04/require-and-module-in-lua/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/04/require-and-module-in-lua/"></span>
             </a>
           </span>
           
@@ -123,9 +123,208 @@
         
 
         
-          <h2 id="1-_Background">1. Background</h2>
-<p>By default, sockets are blocking, which means that when we issue a socket call that cannot be completed immediately, our process is put to sleep, waiting for the condition to be true.</p>
-<p>However, nonblocking I/O prevents us from blocking while we could be doing something productive.</p>
+          <h1 id="1-_require模块发生了什么">1. require模块发生了什么</h1>
+<p>在我们的V8资源侧Lua代码中通常将模块使用module封装起来，使用的时候通过require来引用module，然后利用模块名访问module里面的定义变量和方法。那么，在这个require过程中到底发生了什么？在module声明的时候为什么一般要使用package.seeall参数？如下面例子所示</p>
+<pre><code><span class="preprocessor">#文件名test.lua</span>
+module(<span class="string">"test"</span>, <span class="keyword">package</span>.seeall)
+
+<span class="class"><span class="keyword">class</span> = </span>{}
+local localcalss = {}
+
+<span class="function"><span class="keyword">function</span> <span class="title">good</span><span class="params">()</span>
+  <span class="title">print</span><span class="params">(<span class="string">"good"</span>)</span>
+<span class="title">end</span>
+
+<span class="title">function</span> <span class="title">class</span><span class="type">:good</span><span class="params">()</span>
+  <span class="title">print</span><span class="params">(<span class="string">"class good"</span>)</span>
+<span class="title">end</span></span>
+</code></pre><p>通过require模块，调用定义的方法。</p>
+<pre><code><span class="comment">#文件名example.lua</span>
+<span class="built_in">require</span> <span class="string">"test"</span>
+
+<span class="built_in">local</span> var = test.good()
+<span class="built_in">local</span> var1 = test.class.good()
+</code></pre><h2 id="2-_为什么能使用test-good()的形式">2. 为什么能使用test.good()的形式</h2>
+<p>通过调用以下循环，打印当前环境的全局变量_G表。</p>
+<pre><code><span class="comment">#文件名example.lua</span>
+<span class="built_in">require</span> <span class="string">"test"</span>
+
+<span class="built_in">local</span> var = test.good()
+<span class="built_in">local</span> var1 = test.class.good()
+
+<span class="keyword">for</span> key, <span class="built_in">value</span> <span class="operator">in</span> pairs(_G) <span class="built_in">do</span>
+    print(key, <span class="built_in">value</span>)
+<span class="function"><span class="keyword">end</span></span>
+</code></pre><p>输出：</p>
+<pre><code>_VERSION        Lua <span class="number">5.2</span>
+<span class="built_in">print</span>   <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060210
+setmetatable    <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060890
+tostring        <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x805fd10
+coroutine       table: <span class="number">0</span>x8c667a0
+dofile  <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060d90
+getmetatable    <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060d20
+<span class="keyword">module</span>  <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8c66700
+math    table: <span class="number">0</span>x8c67f68
+loadstring      <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060ac0
+package table: <span class="number">0</span>x8c65858
+assert  <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060e30
+debug   table: <span class="number">0</span>x8c67160
+ipairs  <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060a50
+loadfile        <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060c30
+<span class="keyword">next</span>    <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060370
+<span class="built_in">error</span>   <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x80604d0
+test    table: <span class="number">0</span>x8c696e8
+arg     table: <span class="number">0</span>x8c68970
+rawset  <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060080
+bit32   table: <span class="number">0</span>x8c660e8
+pairs   <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060a30
+rawlen  <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060150
+unpack  <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8067da0
+string  table: <span class="number">0</span>x8c65d58
+require <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8c66740
+<span class="keyword">select</span>  <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x805ff40
+pcall   <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060810
+os      table: <span class="number">0</span>x8c66930
+xpcall  <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060720
+_G      table: <span class="number">0</span>x8c65308
+rawget  <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x80600f0
+tonumber        <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x805fd50
+collectgarbage  <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060560
+io      table: <span class="number">0</span>x8c66b58
+type    <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x805fcc0
+table   table: <span class="number">0</span>x8c669a8
+rawequal        <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x80601b0
+load    <span class="function"><span class="keyword">function</span>:</span> <span class="number">0</span>x8060ac0
+</code></pre><p>我们发现模块test成为example.lua脚本执行过程中的一个全局变量，继续打印这个表中的元素。</p>
+<pre><code><span class="comment">#文件名example.lua</span>
+<span class="built_in">require</span> <span class="string">"test"</span>
+
+<span class="built_in">local</span> var = test.good()
+<span class="built_in">local</span> var1 = test.class.good()
+
+<span class="keyword">for</span> key, <span class="built_in">value</span> <span class="operator">in</span> pairs(_G) <span class="built_in">do</span>
+    print(key, <span class="built_in">value</span>)
+<span class="function"><span class="keyword">end</span></span>
+
+<span class="keyword">for</span> key, <span class="built_in">value</span> <span class="operator">in</span> pairs(_G.test) <span class="built_in">do</span>
+    print(key, <span class="built_in">value</span>)
+<span class="function"><span class="keyword">end</span>    </span>
+</code></pre><p>输出：</p>
+<pre><code>good    function: <span class="number">0x8aca810</span>
+_PACKAGE
+class   table: <span class="number">0x8ac6250</span>
+_NAME   <span class="keyword">test</span>
+_M      table: <span class="number">0x8ac9ba8</span>
+</code></pre><p><strong>总结：本质上使用test.good()方法，就是调用全局变量test表中的good函数，而good函数的定义在module里面。</strong></p>
+<p>所以推测：<code>require &quot;test&quot;</code>的作用是在当前的全局变量中增加一个test的表，这个表中的元素就是module里面定义的全局变量和函数方法(不包括局部变量，如test里面的局部变量localclass)。</p>
+<p>require函数的实现机制有些复杂，这里给出源代码。</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">require</span> <span class="params">(name)</span></span>
+    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">package</span>.loaded[name] <span class="keyword">then</span> <span class="comment">-- module not loaded yet?</span>
+        <span class="keyword">local</span> loader = findloader(name)
+        <span class="keyword">if</span> loader == <span class="keyword">nil</span> <span class="keyword">then</span>
+            <span class="built_in">error</span>(<span class="string">"unable to load module "</span> .. name)
+        <span class="keyword">end</span>
+        <span class="built_in">package</span>.loaded[name] = <span class="keyword">true</span> <span class="comment">-- mark module as loaded</span>
+        <span class="keyword">local</span> res = loader(name) <span class="comment">-- initialize module</span>
+        <span class="keyword">if</span> res ~= <span class="keyword">nil</span> <span class="keyword">then</span>
+            <span class="built_in">package</span>.loaded[name] = res
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> <span class="built_in">package</span>.loaded[name]
+<span class="keyword">end</span>
+</code></pre><h2 id="3-_module做了什么">3. module做了什么</h2>
+<p>为什么在定义module的时候要有参数package.seeall？如果去掉这个参数，会发生什么？</p>
+<pre><code><span class="preprocessor">#文件名test.lua</span>
+module(<span class="string">"test"</span>)
+
+<span class="class"><span class="keyword">class</span> = </span>{}
+local localcalss = {}
+
+<span class="function"><span class="keyword">function</span> <span class="title">good</span><span class="params">()</span>
+  <span class="title">print</span><span class="params">(<span class="string">"good"</span>)</span>
+<span class="title">end</span>
+
+<span class="title">function</span> <span class="title">class</span><span class="type">:good</span><span class="params">()</span>
+  <span class="title">print</span><span class="params">(<span class="string">"class good"</span>)</span>
+<span class="title">end</span></span>
+</code></pre><p>执行example.lua，输出</p>
+<pre><code>lua: ./test.lua:<span class="number">4</span>: attempt <span class="built_in">to</span> call <span class="built_in">global</span> <span class="string">'print'</span> (<span class="operator">a</span> nil <span class="built_in">value</span>)
+stack traceback:
+        ./test.lua:<span class="number">4</span>: <span class="operator">in</span> <span class="function"><span class="keyword">function</span> <span class="string">'good'</span></span>
+        example.lua:<span class="number">3</span>: <span class="operator">in</span> main chunk
+        [C]: <span class="operator">in</span> ?
+</code></pre><p>为什么系统函数print在module的定义中不包括package.seeall参数就会报错呢？</p>
+<p>这是由Lua脚本的执行环境引起的，默认情况下Lua脚本的执行环境为全局表，即_G。在开头打印_G全局表，可以看到print是_G表中的一个元素，类型为函数。在全局表的执行环境下，直接使用print函数没有问题，Lua执行时会在_G表中查找print这个元素，能够找到。</p>
+<p>但是在module中，如果定义时不包括package.seeall参数，那么Lua的执行环境是私有的环境(programing in Lua Chapter14)，其实模块test的定义可以展开module部分。</p>
+<pre><code><span class="preprocessor">#文件名test.lua</span>
+<span class="preprocessor">#module("test") 等价于</span>
+
+local modname = <span class="string">"test"</span>
+local M = {}
+_G[modname] = M
+<span class="keyword">package</span>.loaded[modname] = M
+
+setfenv(<span class="number">1</span>, M)
+
+<span class="class"><span class="keyword">class</span> = </span>{}
+local localcalss = {}
+
+<span class="function"><span class="keyword">function</span> <span class="title">good</span><span class="params">()</span>
+  <span class="title">print</span><span class="params">(<span class="string">"good"</span>)</span>
+<span class="title">end</span>
+
+<span class="title">function</span> <span class="title">class</span><span class="type">:good</span><span class="params">()</span>
+  <span class="title">print</span><span class="params">(<span class="string">"class good"</span>)</span>
+<span class="title">end</span></span>
+</code></pre><p>通过setfenv函数把当前的执行环境切换为M这个表，而在M中没有定义print函数，所以出现错误。</p>
+<p>增加package.seeall参数等同于以下代码。</p>
+<pre><code><span class="preprocessor">#文件名test.lua</span>
+<span class="preprocessor">#module("test") 等价于</span>
+
+local modname = <span class="string">"test"</span>
+local M = {}
+_G[modname] = M
+<span class="keyword">package</span>.loaded[modname] = M
+
+<span class="preprocessor">#设置M表的元表为_G</span>
+setmetatable(M, {__index = _G})
+
+setfenv(<span class="number">1</span>, M)
+
+<span class="class"><span class="keyword">class</span> = </span>{}
+local localcalss = {}
+
+<span class="function"><span class="keyword">function</span> <span class="title">good</span><span class="params">()</span>
+  <span class="title">print</span><span class="params">(<span class="string">"good"</span>)</span>
+<span class="title">end</span>
+
+<span class="title">function</span> <span class="title">class</span><span class="type">:good</span><span class="params">()</span>
+  <span class="title">print</span><span class="params">(<span class="string">"class good"</span>)</span>
+<span class="title">end</span></span>
+</code></pre><p>通过设置M表的元表为_G，当执行print查不到的时候，看是否定义了元表的__index元素，然后在__index指向的表中找到print的方法。</p>
+<h2 id="4-_官方不建议使用module关键字">4. 官方不建议使用module关键字</h2>
+<h5 id="1-_package-seeall_这种方式破坏了模块的高内聚，原本引入”test”模块只想调用它的good()函数，但是它却可以读写全局属性，例如_“test-os”">1. package.seeall 这种方式破坏了模块的高内聚，原本引入”test”模块只想调用它的good()函数，但是它却可以读写全局属性，例如 “test.os”</h5>
+<p>例如，在example.lua中这么写</p>
+<pre><code><span class="comment">#文件名：example.lua</span>
+<span class="built_in">require</span> <span class="string">"test"</span>
+
+<span class="built_in">local</span> var = test.good()
+<span class="built_in">local</span> var1 = test.class.good()
+
+test.io.<span class="built_in">write</span>(<span class="string">"test io write"</span>)
+</code></pre><p>输出：</p>
+<pre><code>test io <span class="keyword">write</span>
+</code></pre><p>这样显然是违背module的本意的。</p>
+<h5 id="2-_module函数压栈操作引发的副作用，污染了全局环境变量。例如module(“test”)_会创建一个test的table，并将这个table注入全局环境变量中，这样使得没有引用它的文件也能调用test模块的方法。">2. module函数压栈操作引发的副作用，污染了全局环境变量。例如module(“test”) 会创建一个test的table，并将这个table注入全局环境变量中，这样使得没有引用它的文件也能调用test模块的方法。</h5>
+<p>例如，private模块并没有require “test”这个模块，但是它里面却可以通过全局变量表来访问test模块里面的方法。</p>
+<pre><code><span class="comment">#文件名private.lua</span>
+<span class="class"><span class="keyword">module</span> "<span class="title">private</span>"</span>
+
+_G.test.good()
+</code></pre><p>输出：</p>
+<pre><code>good
+</code></pre><p>在private.lua没有引入test这个module的时候确仍然可以使用全局变量进行访问，这也是不当的。</p>
+<p>总结：虽然有以上的问题，但是当前代码仍然采用module的形式。</p>
 
         
       </div>
@@ -136,8 +335,8 @@
         
           <div class="post-tags">
             
-              <a href="/tags/Unix-Networking-Programming/">
-                #Unix Networking Programming
+              <a href="/tags/Programming-in-Lua/">
+                #Programming in Lua
               </a>
             
           </div>
@@ -147,13 +346,11 @@
           <div class="post-nav">
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2015/08/20/Strategy/">Strategy</a>
-              
             </div>
 
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2015/07/24/open-function-Trap-in-C/">open function Trap in C++</a>
+                <a href="/2015/08/20/Strategy/">Strategy</a>
               
             </div>
           </div>
@@ -170,8 +367,8 @@
   
     <div class="comments" id="comments">
       
-        <div class="ds-thread" data-thread-key="2015/07/25/non-blocking-IO/"
-             data-title="non-blocking IO" data-url="http://yoursite.com/2015/07/25/non-blocking-IO/">
+        <div class="ds-thread" data-thread-key="2015/09/04/require-and-module-in-lua/"
+             data-title="require and module in lua" data-url="http://yoursite.com/2015/09/04/require-and-module-in-lua/">
         </div>
 
       
@@ -244,7 +441,7 @@
         <div class="post-toc">
           
           
-            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-_Background"><span class="nav-number">1.</span> <span class="nav-text">1. Background</span></a></li></ol></div>
+            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-_require模块发生了什么"><span class="nav-number">1.</span> <span class="nav-text">1. require模块发生了什么</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-_为什么能使用test-good()的形式"><span class="nav-number">1.1.</span> <span class="nav-text">2. 为什么能使用test.good()的形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-_module做了什么"><span class="nav-number">1.2.</span> <span class="nav-text">3. module做了什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-_官方不建议使用module关键字"><span class="nav-number">1.3.</span> <span class="nav-text">4. 官方不建议使用module关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-_package-seeall_这种方式破坏了模块的高内聚，原本引入”test”模块只想调用它的good()函数，但是它却可以读写全局属性，例如_“test-os”"><span class="nav-number">1.3.0.0.1.</span> <span class="nav-text">1. package.seeall 这种方式破坏了模块的高内聚，原本引入”test”模块只想调用它的good()函数，但是它却可以读写全局属性，例如 “test.os”</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-_module函数压栈操作引发的副作用，污染了全局环境变量。例如module(“test”)_会创建一个test的table，并将这个table注入全局环境变量中，这样使得没有引用它的文件也能调用test模块的方法。"><span class="nav-number">1.3.0.0.2.</span> <span class="nav-text">2. module函数压栈操作引发的副作用，污染了全局环境变量。例如module(“test”) 会创建一个test的table，并将这个table注入全局环境变量中，这样使得没有引用它的文件也能调用test模块的方法。</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
           
         </div>
         <div class="post-toc-indicator-bottom post-toc-indicator"></div>
