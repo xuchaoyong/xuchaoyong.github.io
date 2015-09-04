@@ -18,9 +18,9 @@
 
 
 
-	<meta name="keywords" content="Data Structure and Algorithm," />
+	<meta name="keywords" content="Programming in Lua," />
 
-  <title> Maze Problem // Satisfy the Real World! </title>
+  <title> variables // Satisfy the Real World! </title>
 </head>
 
 <body>
@@ -91,7 +91,7 @@
           
           
             
-              Maze Problem
+              variables
             
           
         </h1>
@@ -100,15 +100,15 @@
       <div class="post-meta">
         <span class="post-time">
           
-            Posted on 2015-03-20
+            Posted on 2015-09-04
           
         </span>
         
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/03/20/Maze-Problem/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/20/Maze-Problem/"></span>
+            <a href="/2015/09/04/variables/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/04/variables/"></span>
             </a>
           </span>
           
@@ -123,10 +123,84 @@
         
 
         
-          <h3 id="1-_Problem_Description">1. Problem Description</h3>
-<p><img src="https://raw.githubusercontent.com/xuchaoyong/images/master/simple-maze.png" alt="Screen Shot" title="maze map"></p>
-<h3 id="2-_Analysis">2. Analysis</h3>
-<h3 id="3-_Programming">3. Programming</h3>
+          <h1 id="Lua的变量">Lua的变量</h1>
+<h2 id="1-_没有预定义类型">1. 没有预定义类型</h2>
+<p>Lua是一种动态类型的语言，变量没有预先定义类型，所以变量可以代表任何一个类型。</p>
+<pre><code><span class="title">print</span>(<span class="typedef"><span class="keyword">type</span><span class="container">(<span class="title">a</span>)</span>)  <span class="comment">--&gt; nil ('a' is not initialized)</span></span>
+<span class="title">a</span> = <span class="number">10</span>
+<span class="title">print</span>(<span class="typedef"><span class="keyword">type</span><span class="container">(<span class="title">a</span>)</span>)  <span class="comment">--&gt; number</span></span>
+<span class="title">a</span> = <span class="string">"a string"</span>
+<span class="title">print</span>(<span class="typedef"><span class="keyword">type</span><span class="container">(<span class="title">a</span>)</span>)  <span class="comment">--&gt; string</span></span>
+<span class="title">a</span> = print
+<span class="title">print</span>(<span class="typedef"><span class="keyword">type</span><span class="container">(<span class="title">a</span>)</span>)  <span class="comment">--&gt; function</span></span>
+</code></pre><p>a这个变量可以指向任何的对象类型。</p>
+<h2 id="2-_局部变量">2. 局部变量</h2>
+<p>Lua中的局部变量要用local关键字来显示定义，不用local显示定义的变量就是全局变量：</p>
+<pre><code>g_var <span class="subst">=</span> <span class="number">1</span>         <span class="subst">--</span> <span class="built_in">global</span> <span class="built_in">var</span>
+<span class="built_in">local</span> l_var <span class="subst">=</span> <span class="number">2</span>   <span class="subst">--</span> <span class="built_in">local</span> <span class="built_in">var</span>
+</code></pre><h3 id="2-1作用域">2.1作用域</h3>
+<p>局部变量的生命周期是有限的，它的作用域仅限于声明它的块（block）。 一个块是一个控制结构的执行体、或者是一个函数的执行体再或者是一个程序块（chunk）。我们可以通过下面这个例子来理解一下局部变量作用域的问题：</p>
+<pre><code>x = <span class="number">10</span>
+<span class="keyword">local</span> i = <span class="number">1</span>         <span class="comment">--程序块中的局部变量i</span>
+
+<span class="keyword">while</span> i &lt;=x <span class="keyword">do</span>
+  <span class="keyword">local</span> x = i * <span class="number">2</span>   <span class="comment">--while循环体中的局部变量x</span>
+  <span class="built_in">print</span>(x)          <span class="comment">--打印2, 4, 6, 8, ...(实际输出格式不是这样的，这里只是表示输出结果)</span>
+  i = i + <span class="number">1</span>
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> i &gt; <span class="number">20</span> <span class="keyword">then</span>
+  <span class="keyword">local</span> x           <span class="comment">--then中的局部变量x</span>
+  x = <span class="number">20</span>
+  <span class="built_in">print</span>(x + <span class="number">2</span>)      <span class="comment">--如果i &gt; 20 将会打印22，此处的x是局部变量</span>
+<span class="keyword">else</span>
+  <span class="built_in">print</span>(x)          <span class="comment">--打印10， 这里x是全局变量</span>
+<span class="keyword">end</span>
+
+<span class="built_in">print</span>(x)            <span class="comment">--打印10</span>
+</code></pre><h3 id="2-2_局部变量的好处">2.2 局部变量的好处</h3>
+<p>使用局部变量的一个好处是，局部变量可以避免将一些无用的名称引入全局环境，避免全局环境的污染。另外，访问局部变量比访问全局变量更快。同时，由于局部变量出了作用域之后生命周期结束，这样可以被垃圾回收器及时释放。</p>
+<p>在Lua中，应该尽量让定义变量的语句靠近使用变量的语句，这也可以被看做是一种良好的编程风格。在C这样的语言中，强制程序员在一个块（或一个过程）的起始处声明所有的局部变量，所以有些程序员认为在一个块的中间使用声明语句是一种不良好地习惯。实际上，在需要时才声明变量并且赋予有意义的初值，这样可以提高代码的可读性。对于程序员而言，相比在块中的任意位置顺手声明自己需要的变量，和必须跳到块的起始处声明，大家应该能掂量哪种做法比较方便了吧？</p>
+<h2 id="3-_内存回收">3. 内存回收</h2>
+<p>在C/C++中，定义一个在变量就会分配一段内存(栈或者堆)，在栈上分配的内存会随着变量作用域结束而自动释放，在堆上分配的内存一般需要手动释放。</p>
+<p>在Lua中，系统为对象分配内存，而不为变量分配内存。</p>
+<pre><code><span class="built_in">local</span> <span class="operator">a</span>  <span class="comment">--&gt; 系统不会分配内存给a</span>
+<span class="built_in">local</span> <span class="operator">a</span> = {}  <span class="comment">--&gt; 系统为一个空表分配内存</span>
+</code></pre><p>上面例子中，系统会为空表{}分配内存，变量a只是对表的一个引用。</p>
+<pre><code>i = <span class="number">100</span>
+<span class="keyword">if</span> i &gt; <span class="number">20</span> <span class="keyword">then</span>
+  <span class="keyword">local</span> x = {}
+  b = x
+<span class="keyword">else</span>
+  <span class="built_in">print</span>(x) 
+<span class="keyword">end</span>
+
+<span class="built_in">print</span>(x)  <span class="comment">--&gt; nil</span>
+</code></pre><p>以上例子中，x是一个块局部变量，在else处作用域失效，那么x指向的空表内存会被释放吗？</p>
+<p>答案是：不会。因为全局变量b还指向空表，即空表还存在一个引用。</p>
+<h3 id="3-1_Lua简单回收算法">3.1 Lua简单回收算法</h3>
+<p>Lua最简单的垃圾回收方法是引用计数法，每个分配内存的对象都有一个引用计数。如上例中，空表的引用计数为2，到达else时，引用计数为1。如果一个对象的引用计数为0，那么这个对象占用的内存自动被释放。所以，在上例中空表的内存没有被释放，因为全局变量b指向空表，空表对象的引用计数为1。</p>
+<p>然后引用计数回收算法有个很明显的缺点：循环引用。如果对象a引用对象b，对象b同时引用对象a，使用引用计数法不能顺利的回收内存，将存在内存泄露。</p>
+<pre><code>&gt; <span class="operator">a</span> = {}
+&gt; b = {}
+&gt; <span class="operator">a</span>[<span class="string">'other'</span>] = b
+&gt; b[<span class="string">'other'</span>] = <span class="operator">a</span>   <span class="comment">-- now we have a cyclic reference</span>
+&gt; <span class="operator">a</span>,b = nil,nil    <span class="comment">-- oh dear, we don't have a reference to the 2 tables now</span>
+&gt;                  <span class="comment">-- there are two tables which are unreachable</span>
+</code></pre><p>如上例中最后a和b指向nil，但是两个空表都不会被释放，因为循环引用的原因。</p>
+<h3 id="3-2_标记擦除">3.2 标记擦除</h3>
+<p>为了克服上述循环引用的问题，Lua使用标记擦除法进行垃圾回收。首先记录所有的变量记录他们引用的对象，如果发现变量对某个对象不可达，那么就对对象进行内存回收。如循环引用例子中，两个空表都不可访问，那么两个空表对象的内存被回收。</p>
+<p>这种方法可以克服引用计数法的问题，但是缺点是需要记录所有变量，实时性差。</p>
+<h2 id="4-_变量本质">4. 变量本质</h2>
+<p>在Lua中变量的本质是引用(地址)，指向对象地址的引用。</p>
+<p>比较两个变量是否相等时，只有他们指向的对象地址相等时，它们才是相等的。</p>
+<pre><code><span class="variable">a =</span> {}; a.<span class="variable">x =</span> <span class="number">1</span>; a.<span class="variable">y =</span> <span class="number">0</span>
+<span class="variable">b =</span> {}; b.<span class="variable">x =</span> <span class="number">1</span>; b.<span class="variable">y =</span> <span class="number">0</span>
+<span class="variable">c =</span> a
+
+<span class="variable">a =</span>= c
+a ~= b
+</code></pre><p>如上例中，只有两个变量引用同一个对象时，它们才是相等的。</p>
 
         
       </div>
@@ -137,8 +211,8 @@
         
           <div class="post-tags">
             
-              <a href="/tags/Data-Structure-and-Algorithm/">
-                #Data Structure and Algorithm
+              <a href="/tags/Programming-in-Lua/">
+                #Programming in Lua
               </a>
             
           </div>
@@ -148,13 +222,11 @@
           <div class="post-nav">
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2015/03/24/C-Constructor-Rules/">C++ Constructor Rules</a>
-              
             </div>
 
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2015/03/17/Sort-of-Cake-in-Programming-Beauty/">Sort of Cake in Programming Beauty</a>
+                <a href="/2015/09/04/require-and-module-in-lua/">require and module in lua</a>
               
             </div>
           </div>
@@ -171,8 +243,8 @@
   
     <div class="comments" id="comments">
       
-        <div class="ds-thread" data-thread-key="2015/03/20/Maze-Problem/"
-             data-title="Maze Problem" data-url="http://yoursite.com/2015/03/20/Maze-Problem/">
+        <div class="ds-thread" data-thread-key="2015/09/04/variables/"
+             data-title="variables" data-url="http://yoursite.com/2015/09/04/variables/">
         </div>
 
       
@@ -245,7 +317,7 @@
         <div class="post-toc">
           
           
-            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_Problem_Description"><span class="nav-number">1.</span> <span class="nav-text">1. Problem Description</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_Analysis"><span class="nav-number">2.</span> <span class="nav-text">2. Analysis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-_Programming"><span class="nav-number">3.</span> <span class="nav-text">3. Programming</span></a></li></ol></div>
+            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Lua的变量"><span class="nav-number">1.</span> <span class="nav-text">Lua的变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-_没有预定义类型"><span class="nav-number">1.1.</span> <span class="nav-text">1. 没有预定义类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-_局部变量"><span class="nav-number">1.2.</span> <span class="nav-text">2. 局部变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1作用域"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1作用域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2_局部变量的好处"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 局部变量的好处</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-_内存回收"><span class="nav-number">1.3.</span> <span class="nav-text">3. 内存回收</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1_Lua简单回收算法"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 Lua简单回收算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2_标记擦除"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 标记擦除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-_变量本质"><span class="nav-number">1.4.</span> <span class="nav-text">4. 变量本质</span></a></li></ol></li></ol></div>
           
         </div>
         <div class="post-toc-indicator-bottom post-toc-indicator"></div>
